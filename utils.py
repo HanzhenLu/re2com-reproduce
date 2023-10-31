@@ -5,8 +5,10 @@ def build_words(stem: str, prefix: list):
 			if no not in d:
 				d[no] = dict()
 			d[no][p] = word
+		no = -1
 		for line in open(stem+p):
-			no, word = line.strip().split(maxsplit=1)
+			word = line.strip()
+			no += 1
 			add_word(no, word)
 	return d
 

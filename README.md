@@ -11,14 +11,36 @@
 
 Our code is based on 
 
-- put the dataset into the "funcom" directory
-    - the dataset can be found at https://s3.us-east-2.amazonaws.com/icse2018/funcom.tar.gz
+- download PCSD dataset
+    - we choose [tree-sitter](https://github.com/tree-sitter) tool to extract, so you have to clone tree-sitter-python-master repository under 'tree/vendor/' 
+    - the originalcode files are used to produce AST, and can be found at [SG-Trans](https://github.com/shuzhenggao/SG-Trans/tree/master/python/data)
+    - the code and nl files also come from SG-Trans and can be downloaded from [here](https://drive.google.com/file/d/1c0Im6M71VHn4hv7gmnQnfqa1QtbzFjPn/view)
+- before we start, you file structure should like this
+    - tree
+        - build
+        - vendor
+            - tree-sitter-python-master(clone from the former link)
+    - data/PCSD
+        - originalcode
+            - dev_originalcode
+            - test_originalcode
+            - train_originalcode
+        - test
+            - code.original_subtoken
+            - javadoc.original
+        - train
+            - code.original_subtoken
+            - javadoc.original
+        - val
+            - code.original_subtoken
+            - javadoc.original
+- Generate the AST
 ```
-    tar xvf funcom.tar.gz
+    python extract_ast.py data/PCSD/originalcode data/PCSD/
 ```
 - Process the dataset and generate the vocabulary
 ```
-    ./data-process.py
+    python data-process.py
 ```
 - Build the Retrieval corpus
 ```

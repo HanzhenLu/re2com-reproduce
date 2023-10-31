@@ -1,8 +1,4 @@
 #!/bin/bash
-mkdir standard-exemplars
-./search.sh standard-corpus ../data/standard/train/train.token.code standard-exemplars/train.exemplar ../data/standard/val/test.token.code standard-exemplars/val.exemplar ../data/standard/test/test.token.code standard-exemplars/test.exemplar
-python3 generate_exemplar.py --exemplars standard-exemplars --output ../data/standard
-
-mkdir challenge-exemplars
-./search.sh challenge-corpus ../data/challenge/train/train.token.code challenge-exemplars/train.exemplar ../data/challenge/val/test.token.code challenge-exemplars/val.exemplar ../data/challenge/test/test.token.code challenge-exemplars/test.exemplar
-python3 generate_exemplar.py --exemplars challenge-exemplars --output ../data/challenge
+mkdir PCSD-exemplars
+./search.sh PCSD-corpus ../data/PCSD/train/train.token.code PCSD-exemplars/train.exemplar ../data/PCSD/val/test.token.code PCSD-exemplars/val.exemplar ../data/PCSD/test/test.token.code PCSD-exemplars/test.exemplar
+python3 generate_exemplar.py --exemplars PCSD-exemplars --output ../data/PCSD
