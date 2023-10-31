@@ -12,7 +12,7 @@
 Our code is based on 
 
 - download PCSD dataset
-    - we choose [tree-sitter](https://github.com/tree-sitter) tool to extract, so you have to clone tree-sitter-python-master repository under 'tree/vendor/' 
+    - we choose [tree-sitter](https://github.com/tree-sitter) tool to extract, so you have to clone tree-sitter-python-master repository under `tree/vendor/` 
     - the originalcode files are used to produce AST, and can be found at [SG-Trans](https://github.com/shuzhenggao/SG-Trans/tree/master/python/data)
     - the code and nl files also come from SG-Trans and can be downloaded from [here](https://drive.google.com/file/d/1c0Im6M71VHn4hv7gmnQnfqa1QtbzFjPn/view)
 - before we start, you file structure should like this
@@ -53,25 +53,14 @@ Our code is based on
     cd retrieve
     ./buildExemplars.sh
 ```
-- Train Re2Com model for standard dataset
+- Train Re2Com model for PCSD dataset
 ```
-    cd standard
+    cd PCSD
     python __main__.py re2com.yaml --train -v
-```
-- Train Re2Com model for challenge dataset
-```
-    cd challenge
-    python __main__.py challenge.yaml --train -v
-```
-- Retrieve code with standard dataset as corpus
-  - Note that the output file will only contain numbers, which are the line numbers of the retrieved code.
-```
-    cd retrieve
-    ./search.sh standard-corpus ${input-file} ${output-file}
 ```
 
 ### Evaluation
-The evaluation results are located at `standard/models/eval/` or `challenge/models/eval/`.
+The evaluation results are located at `PCSD/models/eval/`.
 Evaluation code is based on https://github.com/tylin/coco-caption
 ```
     cd evaluation
