@@ -37,6 +37,26 @@ def main():
 				os.rename(OldPath, NewPath)
 			elif not os.path.exists(NewPath):
 				print('Missing file, please double check README\n')
+
+	# Delete repeat data
+	with open(new_path('code', 'train'), 'r') as f:
+		code_data = f.readlines()
+		code, nl, ast = [], [], []
+		with open(new_path('code', 'test'), 'r') as code_file, open(new_path('nl', 'test'), 'r') as nl_file, open(new_path('ast', 'test'), 'r') as ast_file:
+			for line in zip(code_file, nl_file, ast_file):
+				if line[0] in code_data:
+					continue
+				else:
+					code.append(line[0])
+					nl.append(line[1])
+					ast.append(line[2])
+	
+	with open(new_path('code', 'test'), 'w') as code_file, open(new_path('nl', 'test'), 'w') as nl_file, open(new_path('ast', 'test'), 'w') as ast_file:
+		for c, n, a in zip(code, nl, ast):
+			code_file.write(c)
+			nl_file.write(n)
+			ast_file.write(a)
+	
 	# align
 	def build_write_aligned(dir_name):
 		stem = new_dir(dir_name) + '.'

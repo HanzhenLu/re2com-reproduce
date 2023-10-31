@@ -142,5 +142,5 @@ for p in phase.keys():
             root_node = tree.root_node
             ast_list = BFS(root_node)
             SBT = get_sbt_structure(ast_list)
-            f1.write(str(i)+', '+SBT)
+            f1.write(SBT)
             
