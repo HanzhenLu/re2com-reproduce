@@ -56,7 +56,7 @@ Our code is based on
 - Train Re2Com model for PCSD dataset
 ```
     cd PCSD
-    python __main__.py re2com.yaml --train -v
+    python __main__.py re2com.yaml --train
 ```
 
 ### Evaluation
