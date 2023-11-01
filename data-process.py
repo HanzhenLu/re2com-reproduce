@@ -34,6 +34,8 @@ def main():
 			OldPath = old_path(ori_ext, dir_name)
 			NewPath = new_path(new_ext, dir_name)
 			if os.path.exists(OldPath):
+				if os.path.exists(NewPath):
+					os.remove(NewPath)
 				os.rename(OldPath, NewPath)
 			elif not os.path.exists(NewPath):
 				print('Missing file, please double check README\n')

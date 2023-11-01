@@ -25,7 +25,12 @@ def build_with_other(indices: str, content: str):
 	return d
 
 def remove_bos_eos(s: str):
-	return ' '.join(s.strip().split()[1:-1])
+	s_part = s.strip().split()
+	if s_part[0] == '<s>':
+		s_part = s_part[1:]
+	if s_part[-1] == '<\s>':
+		s_part = s_part[:-1]
+	return ' '.join(s_part)
 
 def build_vocab(f):
 	d = dict()
