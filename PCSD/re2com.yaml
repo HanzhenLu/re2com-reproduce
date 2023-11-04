@@ -15,7 +15,7 @@ steps_per_checkpoint: 2000   # number of SGD updates between each checkpoint
 steps_per_eval: 2000     # number of SGD updates between each BLEU eval (on dev set)
 eval_burn_in: 0          # minimum number of updates before starting BLEU eval
 max_steps: 10000000             # maximum number of updates before stopping
-max_epochs: 20           # maximum number of epochs before stopping
+max_epochs: 200           # maximum number of epochs before stopping
 keep_best: 5             # number of best checkpoints to keep (based on BLEU score on dev set)
 feed_previous: 0.0       # randomly feed prev output instead of ground truth to decoder during training ([0,1] proba)
 optimizer: sgd          # which training algorithm to use ('sgd', 'adadelta', or 'adam')
