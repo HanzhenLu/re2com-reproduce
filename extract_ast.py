@@ -1,26 +1,10 @@
-from tree_sitter import Language, Parser, Node
 import sys
 import os
-import json
-import tqdm
+import ast
 import re
+import tokenize
 
 args = sys.argv[1:]
-
-# The first parameter is the location where .so file will be stored
-# sencond paramenter is a list of locations where the github repository of
-# the language you want to parse exists
-Language.build_library(
-    'tree/build/my-languages.so',
-    [
-        'tree/vendor/tree-sitter-python-master'
-    ]
-)
-
-# load parser from .so file
-python_language = Language('tree/build/my-languages.so', 'python')
-python_parser = Parser()
-python_parser.set_language(python_language)
 
 # traverse AST
 # copy from https://github.com/xing-hu/EMSE-DeepCom
@@ -40,7 +24,7 @@ def SBT_(cur_root_id, node_list):
     tmp_list.append(str)
     return tmp_list
 
-def get_sbt_structure(ast_list:list):
+def get_sbt_structure(ast_list):
     ast_sbt = SBT_(0, ast_list)
     return ' '.join(ast_sbt) + '\n'
 
@@ -63,84 +47,50 @@ class Queue:
             return True
         else:
             return False
-
-# split compound words
-def split_word(word:str):
-    words = []
-    
-    if len(word) <= 1:
-        return word
-
-    word_parts = re.split('[^0-9a-zA-Z]', word)
-    for part in word_parts:
-        part_len = len(part)
-        if part_len == 1:
-            words.append(part)
-            continue
-        word = ''
-        for index, char in enumerate(part):
-            # condition : level|A
-            if index == part_len - 1 and char.isupper() and part[index-1].islower():
-                if word != '':
-                    words.append(word)
-                words.append(char)
-                word = ''
-                
-            elif(index != 0 and index != part_len - 1 and char.isupper()):
-                # condition 1 : FIRST|Name
-                # condition 2 : first|Name
-                condition1 = part[index-1].isalpha() and part[index+1].islower()
-                condition2 = part[index-1].islower() and part[index+1].isalpha()
-                if condition1 or condition2:
-                    if word != '':
-                        words.append(word)
-                    word = ''
-            
-            else:
-                word += char
-        
-        if word != '':
-            words.append(word)
-            
-    return [word.lower() for word in words]
   
-def BFS(root:Node):
-    ast = []
+def BFS(root):
+    ast_list = []
     number = 0
     q = Queue()
-    if len(root.named_children) == 1:
-        q.enqueue(root.named_children[0])
-    else:
-        q.enqueue(root)
+    q.enqueue(root)
+    pat = re.compile(r'.*_ast\.(.*)\'.*')
     while not q.is_empty():
         node = q.dequeue()
-        ast.append({
-            "type":node.type,
-            "value":' '.join(split_word(str(node.text))),
-            "children":[i for i in range(number+1, number+1+len(node.named_children))]
+        match = re.match(pat, str(type(node)).lower())
+        _type = match.group(1)
+        children = []
+        for child in ast.iter_child_nodes(node):
+            children.append(child)
+        ast_list.append({
+            "type":_type,
+            "children":[i for i in range(number+1, number+1+len(children))]
         }) 
-        number += len(node.named_children)
-        for i in node.named_children:
+        number += len(children)
+        for i in children:
             q.enqueue(i)
-    return ast
-                        
+    return ast_list
 
-phase = {'train':'train', 'dev':'val', 'test':'test'}
-for p in phase.keys():
-    input_file = os.path.join(args[0], '{}_originalcode'.format(p))
-    output_dir = os.path.join(args[1], '{}'.format(phase[p]))
-    if not os.path.exists(output_dir):
-        os.mkdir(output_dir)
-    if p == 'train':
-        output_file = os.path.join(output_dir, 'train.token.ast')
-    else:
-        output_file = os.path.join(output_dir, 'test.token.ast')
-    with open(input_file, 'r') as f, open(output_file, 'w') as f1:
-        for i, line in tqdm.tqdm(enumerate(f)):
-            code = line.replace('DCNL', '\n').replace('DCSP', '\t').strip()
-            tree = python_parser.parse(bytes(code, 'utf8'))
-            root_node = tree.root_node
-            ast_list = BFS(root_node)
-            SBT = get_sbt_structure(ast_list)
-            f1.write(SBT)
-            
+if __name__ == '__main__':
+    phase = {'train':'train', 'dev':'val', 'test':'test'}
+    for p in phase.keys():
+        input_file = os.path.join(args[0], '{}_originalcode'.format(p))
+        output_dir = os.path.join(args[1], '{}'.format(phase[p]))
+        if not os.path.exists(output_dir):
+            os.mkdir(output_dir)
+        if p == 'train':
+            ast_file = os.path.join(output_dir, 'train.token.ast')
+        else:
+            ast_file = os.path.join(output_dir, 'test.token.ast')
+        with open(input_file, 'r') as f, open(ast_file, 'w') as f1:
+            for line in f:
+                code = re.sub('DCNL\s+', '\n', line)
+                code = re.sub('DCSP\s+', '\t', code)
+                
+                # extract ast
+                root = ast.parse(code)
+                ast_list = BFS(root)
+                SBT = get_sbt_structure(ast_list)
+                f1.write(SBT)
+                
+                
+

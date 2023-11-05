@@ -39,6 +39,7 @@ def main():
 				os.rename(OldPath, NewPath)
 			elif not os.path.exists(NewPath):
 				print('Missing file, please double check README\n')
+				print('{} and {} is missing'.format(str(OldPath), str(NewPath)))
 				exit()
 
 	# Delete repeat data

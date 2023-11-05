@@ -2,41 +2,40 @@
 
 ### Requirements
 - Python 3.7
-- TensorFlow 1.15
-- CUDA 10.1
-- NLTK 3.4.5
-- Java 1.8.0
+    - TensorFlow 1.15
+    - CUDA 10.1
+    - NLTK 3.4.5
+    - Java 1.8.0
+- Python 2.7
 
 ### Train and Test
 
 Our code is based on 
 
 - download PCSD dataset
-    - we choose [tree-sitter](https://github.com/tree-sitter) tool to extract, so you have to clone tree-sitter-python-master repository under `tree/vendor/` 
     - the originalcode files are used to produce AST, and can be found at [SG-Trans](https://github.com/shuzhenggao/SG-Trans/tree/master/python/data)
     - the code and nl files also come from SG-Trans and can be downloaded from [here](https://drive.google.com/file/d/1c0Im6M71VHn4hv7gmnQnfqa1QtbzFjPn/view)
 - before we start, you file structure should like this
-    - tree
-        - build
-        - vendor
-            - tree-sitter-python-master(clone from the former link)
     - data/PCSD
         - originalcode
             - dev_originalcode
             - test_originalcode
             - train_originalcode
         - test
-            - code.original_subtoken
             - javadoc.original
         - train
-            - code.original_subtoken
             - javadoc.original
         - val
-            - code.original_subtoken
             - javadoc.original
 - Generate the AST
 ```
+    # Since the python codes in dataset is written by Python2
+    # you should switch your python to 2.7 so that ast module can parse it successfully
     python extract_ast.py data/PCSD/originalcode data/PCSD/
+```
+```
+    # Switch back to Python3
+    python split_token.py data/PCSD/originalcode data/PCSD
 ```
 - Process the dataset and generate the vocabulary
 ```
