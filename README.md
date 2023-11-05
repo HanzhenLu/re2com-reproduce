@@ -10,11 +10,7 @@
 
 ### Train and Test
 
-Our code is based on 
-
-- download PCSD dataset
-    - the originalcode files are used to produce AST, and can be found at [SG-Trans](https://github.com/shuzhenggao/SG-Trans/tree/master/python/data)
-    - the code and nl files also come from SG-Trans and can be downloaded from [here](https://drive.google.com/file/d/1c0Im6M71VHn4hv7gmnQnfqa1QtbzFjPn/view)
+- We provide the all the data this project need. However, if you wonder where are they come from we also offer a source. The originalcode files are used to produce AST, and can be found at [SG-Trans](https://github.com/shuzhenggao/SG-Trans/tree/master/python/data). It is worth noting that we process the original code and form a new version of PCSD which contains no duplicate data between train set and test set. The nl files also come from SG-Trans and can be downloaded from [here](https://drive.google.com/file/d/1c0Im6M71VHn4hv7gmnQnfqa1QtbzFjPn/view).
 - before we start, you file structure should like this
     - data/PCSD
         - originalcode
